@@ -221,10 +221,9 @@ Push to Heroku:
 $ git push heroku master
 ```
 
-Run migrations, create superuser, and open your live app:
+Create superuser and open your live app:
 
 ```
-$ heroku run python manage.py migrate
 $ heroku run python manage.py createsuperuser
-$ heroku open
 ```
+Until you add some views to your project, you will get a 404 on root in production since debug is False on the server. To verify you deployment, go to appname.herokuapp.com/admin and login with your superuser credentials. 
