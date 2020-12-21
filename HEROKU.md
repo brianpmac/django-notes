@@ -25,12 +25,24 @@ $ pip install psycopg2
 $ pip install whitenoise
 ```
 
+Or simply:
+
+```
+$ pip install django, gunicorn, dj-database-url, psycopg2, whitenoise
+```
+
+### pyscopg2 trouble?
+
+You may run into some trouble installing/building psycopg2. This can be caused by not having the proper prerequisite packages installed and in your path. See this link for more info: https://www.psycopg.org/docs/install.html#build-prerequisites
+
+If you are on a Mac, your best bet is to install Postgres.app: https://postgresapp.com. And be sure to add it to your path: https://postgresapp.com/documentation/cli-tools.html. This should take care of any missing prerequisites when installing psycopg2. 
+
 ## Django setup
 
 From the root of your project folder, run:
 
 ```
-$ django-admin startproject myproject .
+$ django-admin startproject config .
 ```
 
 ## Procfile, runtime.txt and requirements.txt
