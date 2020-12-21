@@ -198,11 +198,6 @@ Confirm everything is working:
 $ python manage.py runserver
 ```
 
-## .gitignore
-
-Add the following to your .gitignore file:
-
-
 ## Push / Deploy
 
 Commit changes:
@@ -210,7 +205,7 @@ Commit changes:
 ```
 $ git add .
 $ git commit -m 'Project setup'
-$ git push origin master
+$ git push origin main
 ```
 
 Push to Heroku:
