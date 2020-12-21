@@ -55,6 +55,7 @@ To deploy on Heroku, you will need to create the following files:
 Create a file called `Procfile` (no extension) that tells Heroku to start and run your app with Gunicorn:
 
 ```
+release: python manage.py migrate
 web: gunicorn config.wsgi --log-file -
 ```
 
@@ -82,7 +83,7 @@ whitenoise==5.2.0
 
 ## .env file
 
-We will use the method of having one settings file that works across all development environments (local, staging, dev) with variables handled by importing values from the respective environment variables. 
+We will use the method of having one settings file that works across all development environments (local, staging, dev) with variables handled by importing values from the respective environments. 
 
 For your local machine, create a .env file in your project root with the following contents:
 
@@ -173,12 +174,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 Add `staticfiles/` to your .gitignore file. 
 
-To add additional logging for collectstatic in production, set the following environment variable:
+For additional logging for collectstatic in production, set the following environment variable:
 ```
 $ heroku config:set DEBUG_COLLECTSTATIC=1
 ```
 
 ## Local
+
+Load your environment variables:
+
+```
+$ source .env
+```
 
 Run the intial database migration on your local database:
 
