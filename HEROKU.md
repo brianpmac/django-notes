@@ -28,7 +28,7 @@ $ pip install whitenoise
 Or simply:
 
 ```
-$ pip install django, gunicorn, dj-database-url, psycopg2, whitenoise
+$ pip install django gunicorn dj-database-url psycopg2 whitenoise
 ```
 
 ### pyscopg2 trouble?
