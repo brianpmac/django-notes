@@ -94,6 +94,8 @@ export DATABASE_URL=""
 
 We will add values to these variables later. 
 
+Note: Add `.env` to your .gitignore file if it's not already present. 
+
 ## settings.py
 
 Make sure you have the following imports at the top of your settings.py file:
@@ -144,7 +146,7 @@ Then set a Heroku DJANGO_SSL_REDIRECT environment variable:
 
 `$ heroku config:set DJANGO_SSL_REDIRECT=True`
 
-Add whitenoise to your middleware in settings.py above all other middleware except SecurityMiddleware:
+Whitenoise will take care of serving your static files on Heroku. Add it to your middleware in settings.py above all other middleware except SecurityMiddleware:
 
 ```python
 MIDDLEWARE = [
@@ -154,7 +156,7 @@ MIDDLEWARE = [
 ]
 ```
 
-Instruct Django to get the database URL from the Heroku environment:
+Get your database URL from the environment. Replace all of the auto-generated `DATABASES` code with:
 
 ```python
 DATABASES = {'default': dj_database_url.config(conn_max_age=500)}
@@ -167,54 +169,12 @@ Add this to your static file settings:
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ```
 
-To add additional logging for collectstatic, set the following environment variable:
+To add additional logging for collectstatic in production, set the following environment variable:
 ```
 $ heroku config:set DEBUG_COLLECTSTATIC=1
 ```
 
-Finally, add this to very bottom of settings.py:
 
-```python
-########################################################
-### ALWAYS KEEP THIS AT THE VERY BOTTOM OF THIS FILE ###
-########################################################
-try:
-    from . local_settings import *
-except ImportError:
-    pass
-```
-
-## local_settings.py
-
-First, make sure there is a `local_settings.py` entry in your .gitignore file.
-
-Create a `local_settings.py` file at the same level as settings.py.
-
-Add the following to it:
-```python
-SECRET_KEY = ''
-
-DEBUG = True
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-```
-
-Generate a new local secret key and copy/paste into local_settings.py:
-
-```
-$ python -c 'import random; import string; print("".join([random.SystemRandom().choice("{}{}{}".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(50)]))'
-```
-
-Create a local Postgres database and populate local_settings.py with your local database credentials.
 
 ## Local
 
@@ -235,6 +195,11 @@ Confirm everything is working:
 ```
 $ python manage.py runserver
 ```
+
+## .gitignore
+
+Add the following to your .gitignore file:
+
 
 ## Push / Deploy
 
