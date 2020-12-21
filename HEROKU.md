@@ -10,7 +10,7 @@ Create a new repo for your project on GitHub with the README option checked and 
 
 Then add the Heroku remote to git:
 ```
-$ heroku git:remote -a myproject
+$ heroku git:remote -a herokuappname
 ```
 
 ## Virtual environment
@@ -47,12 +47,15 @@ $ django-admin startproject config .
 
 ## Procfile, runtime.txt and requirements.txt
 
-To deploy on Heroku, you will need to create the following files: Procfile, runtime.txt and requirements.txt.
+To deploy on Heroku, you will need to create the following files: 
+* Procfile
+* runtime.txt
+* requirements.txt.
 
 Create a file called `Procfile` (no extension) that tells Heroku to start and run your app with Gunicorn:
 
 ```
-web: gunicorn myproject.wsgi --log-file -
+web: gunicorn config.wsgi --log-file -
 ```
 
 Create a `runtime.txt` file that contains just one line indicating the version of Python you are using. To get your exact version of Python use the command `$ python -V`.
@@ -60,21 +63,36 @@ Create a `runtime.txt` file that contains just one line indicating the version o
 runtime.txt:
 
 ```
-python-3.7.3
+python-3.9.1
 ```
 
 Then use `$ pip freeze > requirements.txt` to generate your `requirements.txt` file:
 
 ```
-certifi==2019.6.16
+asgiref==3.3.1
+certifi==2020.12.5
 dj-database-url==0.5.0
-Django==2.2.3
-gunicorn==19.9.0
-psycopg2==2.8.3
-pytz==2019.1
-sqlparse==0.3.0
-whitenoise==4.1.3
+Django==3.1.4
+gunicorn==20.0.4
+psycopg2==2.8.6
+pytz==2020.4
+sqlparse==0.4.1
+whitenoise==5.2.0
 ```
+
+## .env file
+
+We will use the method of having one settings file that works across all development environments (local, staging, dev) with variables handled by importing values from the respective environment variables. 
+
+For your local machine, create a .env file in your project root with the following contents:
+
+```
+export DJANGO_SECRET_KEY=""
+export DJANGO_DEBUG="Truthy"
+export DATABASE_URL=""
+```
+
+We will add values to these variables later. 
 
 ## settings.py
 
@@ -85,21 +103,22 @@ import os
 import dj_database_url
 ````
 
-Instruct Django to get the security key from the Heroku environment:
+Copy/paste the auto-generated secret key in settings.py to your .env `DJANGO_SECRET_KEY` variable. Then replace the entire line in settings.py with:
 
 ```python
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 ```
 
-And set the secret key variable on Heroku using the command:
+Now set the secret key variable on Heroku using the command:
 
 `$ heroku config:set DJANGO_SECRET_KEY=$(python -c 'import random; import string; print("".join([random.SystemRandom().choice("{}{}{}".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(50)]))')`
 
-Set debug to False:
+Replace `DEBUG = True` with:
 
 ```python
-DEBUG = False
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 ```
+Note that any value in your environment variable `DJANGO_DEBUG` besides an empty string -- or the outright absence of that environment variable -- will evaluate to `True`. Using this method, you do NOT need to set `DJANGO_DEBUG` on Heroku at all, unless for some reason you wanted to run debug mode in production (don't). 
 
 Modify allowed hosts to include your domain name(s), Heroku app domain, and localhosts:
 
