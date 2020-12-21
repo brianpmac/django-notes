@@ -162,6 +162,8 @@ Get your database URL from the environment. Replace all of the auto-generated `D
 DATABASES = {'default': dj_database_url.config(conn_max_age=500)}
 ```
 
+Now add your full database URL to your local .env file. The DATABASE_URL variable has already been added to production automatically by Heroku. 
+
 Add this to your static file settings:
 
 ```python
@@ -169,12 +171,12 @@ Add this to your static file settings:
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ```
 
+Add `staticfiles/` to your .gitignore file. 
+
 To add additional logging for collectstatic in production, set the following environment variable:
 ```
 $ heroku config:set DEBUG_COLLECTSTATIC=1
 ```
-
-
 
 ## Local
 
